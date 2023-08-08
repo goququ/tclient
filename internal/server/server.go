@@ -18,7 +18,7 @@ func Run(c *config.AppConfig, tc *gotgproto.Client) {
 
 	handlers := AppHandlers{c, tc}
 
-	r.POST("/create", handlers.createChat)
+	r.GET("/create", handlers.createChat)
 
 	err := r.Run(fmt.Sprintf(":%v", c.Port))
 	if err != nil {

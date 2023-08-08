@@ -10,14 +10,30 @@ import (
 	"github.com/gotd/td/tg"
 )
 
+type CreateChatParams struct {
+	Title string `form:"title" binding:"required"`
+	Sap   string `form:"sap" binding:"required"`
+	Admin string `form:"admin" binding:"required"`
+}
+
+func getCreateChatParams(c *gin.Context) (*CreateChatParams, error) {
+	var params CreateChatParams
+
+	if err := c.ShouldBindQuery(&params); err != nil {
+		return nil, err
+	}
+
+	return &params, nil
+}
+
 type chatsBundle struct {
 	chat     *tg.Chat
 	fullChat tg.ChatFullClass
 }
 
-func createTelegramChat(c *gotgproto.Client) (*chatsBundle, error) {
+func createTelegramChat(c *gotgproto.Client, p *CreateChatParams) (*chatsBundle, error) {
 	creationContext := c.CreateContext()
-	chat, err := creationContext.CreateChat("test", []int64{})
+	chat, err := creationContext.CreateChat(p.Title, []int64{})
 	if err != nil {
 		return nil, fmt.Errorf("unable to create chat")
 	}
@@ -52,15 +68,20 @@ func getChatLink(c tg.ChatFullClass) (string, error) {
 }
 
 func (h AppHandlers) createChat(c *gin.Context) {
-	chatBundle, err := createTelegramChat(h.client)
+	params, err := getCreateChatParams(c)
 	if err != nil {
-		c.AbortWithError(http.StatusInternalServerError, err).SetType(gin.ErrorTypePrivate)
+		c.JSON(http.StatusBadRequest, createApiError(err))
+	}
+
+	chatBundle, err := createTelegramChat(h.client, params)
+	if err != nil {
+		c.JSON(http.StatusInternalServerError, createApiError(err))
 		return
 	}
 
 	link, err := getChatLink(chatBundle.fullChat)
 	if err != nil {
-		c.AbortWithError(http.StatusInternalServerError, err).SetType(gin.ErrorTypePrivate)
+		c.JSON(http.StatusInternalServerError, createApiError(err))
 		return
 	}
 
