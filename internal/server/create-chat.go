@@ -5,6 +5,7 @@ import (
 	"net/http"
 
 	"github.com/anonyindian/gotgproto"
+	"github.com/anonyindian/gotgproto/ext"
 	"github.com/anonyindian/gotgproto/storage"
 	"github.com/gin-gonic/gin"
 	"github.com/gotd/td/tg"
@@ -33,7 +34,15 @@ type chatsBundle struct {
 
 func createTelegramChat(c *gotgproto.Client, p *CreateChatParams) (*chatsBundle, error) {
 	creationContext := c.CreateContext()
-	chat, err := creationContext.CreateChat(p.Title, []int64{})
+
+	var adminId int64
+	if effChat, err := creationContext.ResolveUsername(p.Admin); err != nil {
+		return nil, fmt.Errorf("unable to resolve username '%v'", p.Admin)
+	} else {
+		adminId = effChat.GetID()
+	}
+
+	chat, err := creationContext.CreateChat(p.Title, []int64{adminId})
 	if err != nil {
 		return nil, fmt.Errorf("unable to create chat")
 	}
@@ -44,6 +53,8 @@ func createTelegramChat(c *gotgproto.Client, p *CreateChatParams) (*chatsBundle,
 	if err != nil {
 		return nil, fmt.Errorf("unable to create chat")
 	}
+
+	creationContext.PromoteChatMember(chat.GetID(), adminId, &ext.EditAdminOpts{})
 
 	return &chatsBundle{
 		chat:     chat,
