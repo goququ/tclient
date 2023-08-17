@@ -97,9 +97,8 @@ func (h AppHandlers) createChat(c *gin.Context) {
 	}
 
 	res := gin.H{
-		"id":    chatBundle.fullChat.GetID(),
-		"title": chatBundle.chat.GetTitle(),
-		"link":  link,
+		"link":   link,
+		"status": "success",
 	}
 
 	c.JSON(http.StatusOK, res)
