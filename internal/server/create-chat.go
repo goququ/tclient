@@ -2,7 +2,9 @@ package server
 
 import (
 	"fmt"
+	"log"
 	"net/http"
+	"tclient/internal/schemas"
 
 	"github.com/anonyindian/gotgproto"
 	"github.com/anonyindian/gotgproto/ext"
@@ -78,13 +80,13 @@ func getChatLink(c tg.ChatFullClass) (string, error) {
 	return link, nil
 }
 
-func (h AppHandlers) createChat(c *gin.Context) {
+func (h Application) createChat(c *gin.Context) {
 	params, err := getCreateChatParams(c)
 	if err != nil {
 		c.JSON(http.StatusBadRequest, createApiError(err))
 	}
 
-	chatBundle, err := createTelegramChat(h.client, params)
+	chatBundle, err := createTelegramChat(h.Client, params)
 	if err != nil {
 		c.JSON(http.StatusInternalServerError, createApiError(err))
 		return
@@ -94,6 +96,18 @@ func (h AppHandlers) createChat(c *gin.Context) {
 	if err != nil {
 		c.JSON(http.StatusInternalServerError, createApiError(err))
 		return
+	}
+
+	record := schemas.ChatRecord{
+		Id:    chatBundle.chat.GetID(),
+		Link:  link,
+		Admin: params.Admin,
+		Sap:   params.Sap,
+		Title: params.Title,
+	}
+
+	if err := h.Db.NewChat(&record); err != nil {
+		log.Println("Unable to save chat to mongo &#v", record)
 	}
 
 	res := gin.H{

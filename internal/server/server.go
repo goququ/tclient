@@ -2,28 +2,34 @@ package server
 
 import (
 	"fmt"
+	"net/http"
 	"tclient/internal/config"
+	"tclient/internal/db"
 
 	"github.com/anonyindian/gotgproto"
 	"github.com/gin-gonic/gin"
 )
 
-type AppHandlers struct {
-	config *config.AppConfig
-	client *gotgproto.Client
+type Application struct {
+	Config *config.AppConfig
+	Client *gotgproto.Client
+	Db     *db.DBClient
 }
 
-func Run(c *config.AppConfig, tc *gotgproto.Client) {
-	r := gin.Default()
+func (app Application) Run() error {
+	router := gin.Default()
 
-	handlers := AppHandlers{c, tc}
+	router.GET("/create", app.createChat)
 
-	r.GET("/create", handlers.createChat)
-
-	err := r.Run(fmt.Sprintf(":%v", c.Port))
-	if err != nil {
-		panic(err)
+	srv := &http.Server{
+		Addr:    fmt.Sprintf(":%v", app.Config.Port),
+		Handler: router,
 	}
 
-	fmt.Printf("Server is running on port %v", c.Port)
+	if err := srv.ListenAndServe(); err != nil {
+		return err
+	}
+
+	fmt.Printf("Server is running on port %v", app.Config.Port)
+	return nil
 }
