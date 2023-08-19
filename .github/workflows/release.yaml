@@ -22,7 +22,7 @@ jobs:
 
       - name: Build
         run: |
-          go build -o tclient -v ./cmd/main.go \
+          go build -o tclient -v ./cmd/main.go &&\
           GOOS=windows GOARCH=amd64 go build -o tclient.exe -v ./cmd/main.go \
 
       - name: Release
