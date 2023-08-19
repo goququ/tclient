@@ -25,8 +25,8 @@ jobs:
 
       - name: Build
         run: |
-          GOOS=darwin GOARCH=amd64 go build -o ./build/tclient.darwin.amd64 -v ./cmd/main.go &&\
-          GOOS=windows GOARCH=amd64 go build -o ./build/tclient.win.amd64.exe -v ./cmd/main.go \
+          CGO_ENABLED=1 GOOS=darwin GOARCH=amd64 go build -o ./build/tclient.darwin.amd64 -v ./cmd/main.go &&\
+          CGO_ENABLED=1 GOOS=windows GOARCH=amd64 go build -o ./build/tclient.win.amd64.exe -v ./cmd/main.go \
 
       - name: Release
         uses: softprops/action-gh-release@v1
