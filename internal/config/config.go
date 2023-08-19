@@ -9,6 +9,13 @@ import (
 	"github.com/joho/godotenv"
 )
 
+type Env string
+
+const (
+	Production  Env = "production"
+	Development Env = "development"
+)
+
 type AppConfig struct {
 	// telegram client variables
 	Phone   string
@@ -18,6 +25,8 @@ type AppConfig struct {
 	Port int
 
 	MongoConnectString string
+
+	EnvMode Env
 }
 
 func Read() (*AppConfig, error) {
@@ -25,6 +34,12 @@ func Read() (*AppConfig, error) {
 	if err != nil {
 		log.Println("Unable to find .env file")
 	}
+
+	env := Development
+	if osEnv := os.Getenv("TGA_ENV"); osEnv == string(Production) {
+		env = Production
+	}
+	log.Printf("Application runs in %v mode", env)
 
 	phone := os.Getenv("TGA_PHONE")
 	if len(phone) == 0 {
@@ -58,5 +73,6 @@ func Read() (*AppConfig, error) {
 		ApiHash:            apiHash,
 		Port:               port,
 		MongoConnectString: mongoConnectString,
+		EnvMode:            env,
 	}, nil
 }

@@ -17,6 +17,10 @@ type Application struct {
 }
 
 func (app Application) Run() error {
+	if app.Config.EnvMode == config.Production {
+		gin.SetMode(gin.ReleaseMode)
+	}
+
 	router := gin.Default()
 
 	router.GET("/create", app.createChat)
