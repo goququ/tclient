@@ -1,3 +1,7 @@
+build/
+
+tclient.session
+
 !.env.example
 .env
-tclient.session
+
