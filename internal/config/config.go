@@ -23,7 +23,7 @@ type AppConfig struct {
 func Read() (*AppConfig, error) {
 	err := godotenv.Load()
 	if err != nil {
-		return nil, fmt.Errorf("Error loading .env file")
+		log.Println("Unable to find .env file")
 	}
 
 	phone := os.Getenv("TGA_PHONE")
