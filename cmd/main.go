@@ -9,7 +9,11 @@ import (
 )
 
 func main() {
-	appConfig := config.Read()
+	appConfig, err := config.Read()
+	if err != nil {
+		log.Fatal(err)
+	}
+
 	tgClient, err := client.Create(appConfig)
 	if err != nil {
 		log.Fatal(err)

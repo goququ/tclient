@@ -1,6 +1,7 @@
 package config
 
 import (
+	"fmt"
 	"log"
 	"os"
 	"strconv"
@@ -19,30 +20,30 @@ type AppConfig struct {
 	MongoConnectString string
 }
 
-func Read() *AppConfig {
+func Read() (*AppConfig, error) {
 	err := godotenv.Load()
 	if err != nil {
-		log.Fatal("Error loading .env file")
+		return nil, fmt.Errorf("Error loading .env file")
 	}
 
 	phone := os.Getenv("TGA_PHONE")
 	if len(phone) == 0 {
-		log.Fatal("No 'TGA_PHONE' variable defined")
+		return nil, fmt.Errorf("No 'TGA_PHONE' variable defined")
 	}
 
 	appId, err := strconv.Atoi(os.Getenv("TGA_APP_ID"))
 	if err != nil {
-		log.Fatal("invalid value of 'TGA_APP_ID'")
+		return nil, fmt.Errorf("invalid value of 'TGA_APP_ID'")
 	}
 
 	apiHash := os.Getenv("TGA_API_HASH")
 	if len(apiHash) == 0 {
-		log.Fatal("No 'TGA_API_HASH' variable defined")
+		return nil, fmt.Errorf("No 'TGA_API_HASH' variable defined")
 	}
 
 	mongoConnectString := os.Getenv("TGA_MONGO_CONNECTION")
 	if len(mongoConnectString) == 0 {
-		log.Fatal("No 'TGA_MONGO_CONNECTION' variable defined")
+		return nil, fmt.Errorf("No 'TGA_MONGO_CONNECTION' variable defined")
 	}
 
 	port, err := strconv.Atoi(os.Getenv("TGA_PORT"))
@@ -57,5 +58,5 @@ func Read() *AppConfig {
 		ApiHash:            apiHash,
 		Port:               port,
 		MongoConnectString: mongoConnectString,
-	}
+	}, nil
 }
