@@ -2,8 +2,10 @@ name: Release
 
 on:
   push:
-    tags:
-      - 'v*'
+    branches:
+      - master
+    # tags:
+    #   - 'v*'
 
 permissions:
   contents: write
@@ -25,6 +27,8 @@ jobs:
 
       - name: Build
         run: |
+          apt-get update && \
+          apt-get install gcc-multilib && \
           CC=arm-linux-gnueabihf-gcc CGO_ENABLED=1 GOOS=darwin GOARCH=amd64 go build -o ./build/tclient.darwin.amd64 -v ./cmd/main.go &&\
           CC=arm-linux-gnueabihf-gcc CGO_ENABLED=1 GOOS=windows GOARCH=amd64 go build -o ./build/tclient.win.amd64.exe -v ./cmd/main.go \
 
