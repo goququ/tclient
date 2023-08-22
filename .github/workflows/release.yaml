@@ -23,14 +23,15 @@ jobs:
         uses: actions/checkout@v2
 
       - name: Get dependencies
-        run: go get -v -t -d ./...
+        run: |
+          go get -v -t -d ./... && \
+          sudo apt-get update && \
+          sudo apt-get install gcc-aarch64-linux-gnu
 
       - name: Build
         run: |
-          sudo apt-get update && \
-          sudo apt-get install gcc-aarch64-linux-gnu && \
-          CC=gcc-aarch64-linux-gnu CGO_ENABLED=1 GOOS=darwin GOARCH=amd64 go build -o ./build/tclient.darwin.amd64 -v ./cmd/main.go &&\
-          CC=arm-linux-gnueabihf-gcc CGO_ENABLED=1 GOOS=windows GOARCH=amd64 go build -o ./build/tclient.win.amd64.exe -v ./cmd/main.go \
+          CC=gcc-aarch64-linux-gnu CGO_ENABLED=1 GOOS=darwin GOARCH=amd64 go build -o ./build/tclient.darwin.amd64 -v ./cmd/main.go #&&\
+          # CC=arm-linux-gnueabihf-gcc CGO_ENABLED=1 GOOS=windows GOARCH=amd64 go build -o ./build/tclient.win.amd64.exe -v ./cmd/main.go \
 
       - name: Release
         uses: softprops/action-gh-release@v1
