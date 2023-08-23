@@ -29,16 +29,18 @@ type AppConfig struct {
 	EnvMode Env
 }
 
+var env Env
+
 func Read() (*AppConfig, error) {
 	err := godotenv.Load()
 	if err != nil {
 		log.Println("Unable to find .env file")
 	}
 
-	env := Development
-	if osEnv := os.Getenv("TGA_ENV"); osEnv == string(Production) {
-		env = Production
+	if env == "" {
+		env = Development
 	}
+
 	log.Printf("Application runs in %v mode", env)
 
 	phone := os.Getenv("TGA_PHONE")
