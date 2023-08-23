@@ -30,8 +30,9 @@ jobs:
 
       - name: Build
         run: |
+          mkdir ./build && \
           pwd && ls -al && \
-          xgo --targets=windows/amd64,darwin/amd64 --out=tclient --ldflags="-X config.env=production" --branch=master  ./cmd/main.go && \
+          xgo --targets=windows/amd64,darwin/amd64 --dest="./build" --out=tclient --ldflags="-X config.env=production" --branch=master  github.com/goququ/tclient/cmd && \
           ls -al 
           # CC=gcc-aarch64-linux-gnu CGO_ENABLED=1 GOOS=darwin GOARCH=amd64 go build -o ./build/tclient.darwin.amd64 -v ./cmd/main.go #&&\
           # CC=arm-linux-gnueabihf-gcc CGO_ENABLED=1 GOOS=windows GOARCH=amd64 go build -o ./build/tclient.win.amd64.exe -v ./cmd/main.go \
@@ -44,6 +45,6 @@ jobs:
       - name: Release
         uses: softprops/action-gh-release@v1
         with:
-          files: /dest/*
+          files: ./build/*
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
