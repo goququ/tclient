@@ -29,11 +29,25 @@ jobs:
           go get -v -t -d ./... 
 
       - name: Build
-        run: |
-          mkdir ./build && \
-          pwd && ls -al && \
-          sudo xgo --targets=windows/amd64,darwin/amd64 --dest="./build" --out=tclient --ldflags="-X config.env=production" --branch=master  github.com/goququ/tclient/cmd && \
-          ls -al && ls -al ./build
+        uses: crazy-max/ghaction-xgo@v2
+        with:
+          xgo_version: latest
+          go_version: 1.21
+          dest: build
+          prefix: tclient
+          targets: windows/amd64,linux/amd64,linux/amd64,darwin/amd64
+          v: true
+          x: true
+          pkg: ./cmd
+          race: false
+          buildmode: default
+          trimpath: true
+          # - name: Build
+          #   run: |
+          #     mkdir ./build && \
+          #     pwd && ls -al && \
+          #     sudo xgo --targets=windows/amd64,darwin/amd64 --dest="./build" --out=tclient --ldflags="-X config.env=production" --branch=master  github.com/goququ/tclient/cmd && \
+          #     ls -al && ls -al ./build
           # CC=gcc-aarch64-linux-gnu CGO_ENABLED=1 GOOS=darwin GOARCH=amd64 go build -o ./build/tclient.darwin.amd64 -v ./cmd/main.go #&&\
           # CC=arm-linux-gnueabihf-gcc CGO_ENABLED=1 GOOS=windows GOARCH=amd64 go build -o ./build/tclient.win.amd64.exe -v ./cmd/main.go \
 
