@@ -31,7 +31,7 @@ jobs:
       - name: Build
         run: |
           pwd && ls -al && \
-          xgo --targets=windows/amd64,darwin/amd64 --out=tclient --ldflags="-X config.env=production" --branch=master  github.com/goququ/tclient/cmd && \
+          xgo --targets=windows/amd64,darwin/amd64 --out=tclient --ldflags="-X config.env=production" --branch=master  ./cmd/main.go && \
           ls -al 
           # CC=gcc-aarch64-linux-gnu CGO_ENABLED=1 GOOS=darwin GOARCH=amd64 go build -o ./build/tclient.darwin.amd64 -v ./cmd/main.go #&&\
           # CC=arm-linux-gnueabihf-gcc CGO_ENABLED=1 GOOS=windows GOARCH=amd64 go build -o ./build/tclient.win.amd64.exe -v ./cmd/main.go \
