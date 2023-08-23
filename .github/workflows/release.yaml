@@ -13,6 +13,8 @@ permissions:
 jobs:
   build:
     runs-on: ubuntu-latest
+    container:
+      image: techknowlogick/xgo
     steps:
       - name: Set up Go
         uses: actions/setup-go@v2
@@ -28,10 +30,11 @@ jobs:
 
       - name: Build
         run: |
-          go build -o ./build/tclient.darwin.amd64 -ldflags "-X config.env=production" ./cmd/main.go #&&\
+          xgo --targets=windows/amd64,darwin/amd64 --out=tclient --ldflags="-X config.env=production" --branch=master --dest="./build" github.com/goququ/tclient/cmd
           # CC=gcc-aarch64-linux-gnu CGO_ENABLED=1 GOOS=darwin GOARCH=amd64 go build -o ./build/tclient.darwin.amd64 -v ./cmd/main.go #&&\
           # CC=arm-linux-gnueabihf-gcc CGO_ENABLED=1 GOOS=windows GOARCH=amd64 go build -o ./build/tclient.win.amd64.exe -v ./cmd/main.go \
 
+          # ~/go/bin/xgo --targets=windows/amd64,darwin/amd64 --out=tclient -ldflags "-X config.env=production" --dest=./build github.com/goququ/tclient/cmd
       - name: Release
         uses: softprops/action-gh-release@v1
         with:
