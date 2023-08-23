@@ -45,19 +45,23 @@ func createTelegramChat(c *gotgproto.Client, p *CreateChatParams) (*chatsBundle,
 		adminId = effChat.GetID()
 	}
 
+	log.Printf("Creating chat '%v'", p.Title)
 	chat, err := creationContext.CreateChat(p.Title, []int64{adminId})
 	if err != nil {
 		return nil, fmt.Errorf("unable to create chat")
 	}
+	chatId := chat.GetID()
 
-	storage.AddPeer(chat.GetID(), storage.DefaultAccessHash, storage.TypeChat, storage.DefaultUsername)
+	log.Printf("Created chat with id: %v", chatId)
 
-	fullChat, err := creationContext.GetChat(chat.GetID())
+	storage.AddPeer(chatId, storage.DefaultAccessHash, storage.TypeChat, storage.DefaultUsername)
+
+	fullChat, err := creationContext.GetChat(chatId)
 	if err != nil {
-		return nil, fmt.Errorf("unable to create chat")
+		return nil, fmt.Errorf("unable to get full chat with id: %v", chatId)
 	}
 
-	creationContext.PromoteChatMember(chat.GetID(), adminId, &ext.EditAdminOpts{})
+	creationContext.PromoteChatMember(chatId, adminId, &ext.EditAdminOpts{})
 
 	return &chatsBundle{
 		chat:     chat,

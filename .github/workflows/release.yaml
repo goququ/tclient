@@ -27,7 +27,7 @@ jobs:
           go_version: 1.21
           dest: build
           prefix: tclient
-          targets: windows/amd64,linux/amd64,linux/amd64,darwin/amd64
+          targets: windows/amd64,linux/amd64,darwin/amd64
           v: true
           x: false
           pkg: ./cmd

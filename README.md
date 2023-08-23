@@ -23,3 +23,11 @@ cp .env.example .env
 
 and fill it with your information.
 
+
+### For local build:
+
+use this https://github.com/techknowlogick/xgo/
+
+```bash
+~/go/bin/xgo --targets=darwin/amd64 --out=tclient --ldflags="-X config.env=production" --dest="$(pwd)/build" ./cmd/main.go
+```
