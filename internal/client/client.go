@@ -2,7 +2,8 @@ package client
 
 import (
 	"log"
-	"tclient/internal/config"
+
+	"github.com/goququ/tclient/internal/config"
 
 	"github.com/anonyindian/gotgproto"
 	"github.com/anonyindian/gotgproto/sessionMaker"

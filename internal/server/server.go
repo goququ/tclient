@@ -3,8 +3,9 @@ package server
 import (
 	"fmt"
 	"net/http"
-	"tclient/internal/config"
-	"tclient/internal/db"
+
+	"github.com/goququ/tclient/internal/config"
+	"github.com/goququ/tclient/internal/db"
 
 	"github.com/anonyindian/gotgproto"
 	"github.com/gin-gonic/gin"

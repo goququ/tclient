@@ -4,7 +4,8 @@ import (
 	"fmt"
 	"log"
 	"net/http"
-	"tclient/internal/schemas"
+
+	"github.com/goququ/tclient/internal/schemas"
 
 	"github.com/anonyindian/gotgproto"
 	"github.com/anonyindian/gotgproto/ext"

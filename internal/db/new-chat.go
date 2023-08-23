@@ -3,7 +3,8 @@ package db
 import (
 	"context"
 	"fmt"
-	"tclient/internal/schemas"
+
+	"github.com/goququ/tclient/internal/schemas"
 
 	"go.mongodb.org/mongo-driver/mongo"
 )

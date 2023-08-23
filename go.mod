@@ -1,4 +1,4 @@
-module tclient
+module github.com/goququ/tclient
 
 go 1.21
 

@@ -2,10 +2,11 @@ package main
 
 import (
 	"log"
-	"tclient/internal/client"
-	"tclient/internal/config"
-	"tclient/internal/db"
-	"tclient/internal/server"
+
+	"github.com/goququ/tclient/internal/client"
+	"github.com/goququ/tclient/internal/config"
+	"github.com/goququ/tclient/internal/db"
+	"github.com/goququ/tclient/internal/server"
 )
 
 func main() {

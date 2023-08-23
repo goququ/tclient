@@ -3,7 +3,8 @@ package db
 import (
 	"context"
 	"log"
-	"tclient/internal/config"
+
+	"github.com/goququ/tclient/internal/config"
 
 	"go.mongodb.org/mongo-driver/mongo"
 	"go.mongodb.org/mongo-driver/mongo/options"
