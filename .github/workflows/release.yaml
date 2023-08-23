@@ -13,8 +13,8 @@ permissions:
 jobs:
   build:
     runs-on: ubuntu-latest
-    container:
-      image: techknowlogick/xgo
+    # container:
+    #   image: techknowlogick/xgo
     steps:
       - name: Set up Go
         uses: actions/setup-go@v2
