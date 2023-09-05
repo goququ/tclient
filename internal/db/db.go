@@ -31,7 +31,7 @@ func New(c *config.AppConfig) (*DBClient, error) {
 	}
 	log.Printf("MONGO: Successfully created mongo db client")
 
-	ctx, cancel = context.WithTimeout(context.Background(), 4*time.Second)
+	ctx, cancel = context.WithTimeout(context.Background(), 10*time.Second)
 	defer cancel()
 	log.Printf("MONGO: Checking connection to db")
 	err = client.Ping(ctx, nil)
