@@ -40,7 +40,7 @@ func createTelegramChat(c *gotgproto.Client, p *CreateChatParams) (*chatsBundle,
 
 	var adminId int64
 	if effChat, err := creationContext.ResolveUsername(p.Admin); err != nil {
-		return nil, fmt.Errorf("unable to resolve username '%v'", p.Admin)
+		return nil, fmt.Errorf("unable to resolve username '%v', error: %v", p.Admin, err.Error())
 	} else {
 		adminId = effChat.GetID()
 	}
@@ -48,7 +48,7 @@ func createTelegramChat(c *gotgproto.Client, p *CreateChatParams) (*chatsBundle,
 	log.Printf("Creating chat '%v'", p.Title)
 	chat, err := creationContext.CreateChat(p.Title, []int64{adminId})
 	if err != nil {
-		return nil, fmt.Errorf("unable to create chat")
+		return nil, fmt.Errorf("unable to create chat: %v", err.Error())
 	}
 	chatId := chat.GetID()
 
@@ -58,10 +58,13 @@ func createTelegramChat(c *gotgproto.Client, p *CreateChatParams) (*chatsBundle,
 
 	fullChat, err := creationContext.GetChat(chatId)
 	if err != nil {
-		return nil, fmt.Errorf("unable to get full chat with id: %v", chatId)
+		return nil, fmt.Errorf("unable to get full chat :%v", err.Error())
 	}
 
-	creationContext.PromoteChatMember(chatId, adminId, &ext.EditAdminOpts{})
+	_, err = creationContext.PromoteChatMember(chatId, adminId, &ext.EditAdminOpts{})
+	if err != nil {
+		log.Printf("WARNING: Unable to promote user %v to admin. Error: %v", p.Admin, err.Error())
+	}
 
 	return &chatsBundle{
 		chat:     chat,

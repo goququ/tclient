@@ -13,6 +13,8 @@ func Create(c *config.AppConfig) (*gotgproto.Client, error) {
 	clientType := gotgproto.ClientType{
 		Phone: c.Phone,
 	}
+
+	log.Printf("Creating new toproto client for phone: %v", c.Phone)
 	client, err := gotgproto.NewClient(
 		c.AppId,
 		c.ApiHash,
