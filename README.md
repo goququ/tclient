@@ -23,6 +23,17 @@ cp .env.example .env
 
 and fill it with your information.
 
+### how to use
+
+- download latest release
+- add filled .env file near the binary
+- execute it
+- do some query to server 
+```bash
+curl -X GET 'http://localhost:9001/create?sap=123&title=title&admin=someNick' \
+-H 'Content-Type: application/json'
+```
+
 
 ### For local build:
 
