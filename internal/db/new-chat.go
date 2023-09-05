@@ -10,7 +10,7 @@ import (
 )
 
 func (c *DBClient) getChatsCollection() *mongo.Collection {
-	collection := c.client.Database("tclient").Collection("chats")
+	collection := c.Client.Database("tclient").Collection("chats")
 
 	return collection
 }

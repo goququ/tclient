@@ -12,7 +12,7 @@ import (
 )
 
 type DBClient struct {
-	client *mongo.Client
+	Client *mongo.Client
 }
 
 func New(c *config.AppConfig) (*DBClient, error) {
@@ -44,6 +44,13 @@ func New(c *config.AppConfig) (*DBClient, error) {
 	log.Println("Connected to MongoDB!")
 
 	return &DBClient{
-		client,
+		Client: client,
 	}, nil
+}
+
+func (dc *DBClient) Disconnect() {
+	err := dc.Client.Disconnect(context.Background())
+	if err != nil {
+		log.Print("Failed to close DB connection")
+	}
 }
