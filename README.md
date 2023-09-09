@@ -13,6 +13,10 @@ TGA_PORT=12131 #optional
 TGA_MONGO_CONNECTION="mongodb://localhost:27017"
 
 TGA_ENV=development # or "production"
+
+TGA_RETRY_COUNT = 3 #optional, default 3
+TGA_RETRY_DELEY_SECONDS=5
+
 ```
 
 Also supports .env file on the same lavel as executed binary file. Just copy `.env.example` file

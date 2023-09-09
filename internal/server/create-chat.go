@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"log"
 	"net/http"
+	"time"
 
 	"github.com/goququ/tclient/internal/schemas"
 
@@ -35,7 +36,7 @@ type chatsBundle struct {
 	fullChat tg.ChatFullClass
 }
 
-func createTelegramChat(c *gotgproto.Client, p *CreateChatParams) (*chatsBundle, error) {
+func createTelegramChat(c *gotgproto.Client, p *CreateChatParams, retries int, retryDelaySec int) (*chatsBundle, error) {
 	creationContext := c.CreateContext()
 
 	var adminId int64
@@ -46,9 +47,19 @@ func createTelegramChat(c *gotgproto.Client, p *CreateChatParams) (*chatsBundle,
 	}
 
 	log.Printf("Creating chat '%v'", p.Title)
-	chat, err := creationContext.CreateChat(p.Title, []int64{adminId})
-	if err != nil {
-		return nil, fmt.Errorf("unable to create chat: %v", err.Error())
+	var chat *tg.Chat
+	for attept := 0; chat == nil && attept < retries; attept++ {
+		newChat, err := creationContext.CreateChat(p.Title, []int64{adminId})
+		if err != nil {
+			log.Printf("Attempt: %v, Error: %v", attept+1, err.Error())
+			time.Sleep(time.Second * time.Duration(retryDelaySec))
+			continue
+		}
+		chat = newChat
+	}
+
+	if chat == nil {
+		return nil, fmt.Errorf("unable to create chat")
 	}
 	chatId := chat.GetID()
 
@@ -88,13 +99,13 @@ func getChatLink(c tg.ChatFullClass) (string, error) {
 	return link, nil
 }
 
-func (h Application) createChat(c *gin.Context) {
+func (h *Application) createChat(c *gin.Context) {
 	params, err := getCreateChatParams(c)
 	if err != nil {
 		c.JSON(http.StatusBadRequest, createApiError(err))
 	}
 
-	chatBundle, err := createTelegramChat(h.Client, params)
+	chatBundle, err := createTelegramChat(h.Client, params, h.Config.RetryCount, h.Config.RetryDelaySec)
 	if err != nil {
 		c.JSON(http.StatusInternalServerError, createApiError(err))
 		return

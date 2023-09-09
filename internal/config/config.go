@@ -22,7 +22,9 @@ type AppConfig struct {
 	AppId   int
 	ApiHash string
 	// api variables
-	Port int
+	Port          int
+	RetryCount    int
+	RetryDelaySec int
 
 	MongoConnectString string
 
@@ -69,6 +71,19 @@ func Read() (*AppConfig, error) {
 		log.Printf("Unable to find application port, fallback to %v", port)
 	}
 
+	retryCount, err := strconv.Atoi(os.Getenv("TGA_RETRY_COUNT"))
+	if err != nil {
+		log.Print("Invalid value of 'TGA_RETRY_COUNT'")
+	}
+
+	retryDelaySeconds := 5
+	if val, err := strconv.Atoi(os.Getenv("TGA_RETRY_DELEY_SECONDS")); err != nil {
+		log.Print("Invalid value of 'TGA_RETRY_DELEY_SECONDS'")
+	} else {
+		retryDelaySeconds = val
+	}
+	log.Printf("value of 'TGA_RETRY_DELEY_SECONDS' %v", retryDelaySeconds)
+
 	return &AppConfig{
 		Phone:              phone,
 		AppId:              appId,
@@ -76,5 +91,7 @@ func Read() (*AppConfig, error) {
 		Port:               port,
 		MongoConnectString: mongoConnectString,
 		EnvMode:            env,
+		RetryCount:         retryCount,
+		RetryDelaySec:      retryDelaySeconds,
 	}, nil
 }
