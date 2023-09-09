@@ -15,7 +15,7 @@ TGA_MONGO_CONNECTION="mongodb://localhost:27017"
 TGA_ENV=development # or "production"
 
 TGA_RETRY_COUNT = 3 #optional, default 3
-TGA_RETRY_DELEY_SECONDS=5
+TGA_RETRY_DELAY_SECONDS=5
 
 ```
 

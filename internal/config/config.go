@@ -77,12 +77,12 @@ func Read() (*AppConfig, error) {
 	}
 
 	retryDelaySeconds := 5
-	if val, err := strconv.Atoi(os.Getenv("TGA_RETRY_DELEY_SECONDS")); err != nil {
-		log.Print("Invalid value of 'TGA_RETRY_DELEY_SECONDS'")
+	if val, err := strconv.Atoi(os.Getenv("TGA_RETRY_DELAY_SECONDS")); err != nil {
+		log.Print("Invalid value of 'TGA_RETRY_DELAY_SECONDS'")
 	} else {
 		retryDelaySeconds = val
 	}
-	log.Printf("value of 'TGA_RETRY_DELEY_SECONDS' %v", retryDelaySeconds)
+	log.Printf("value of 'TGA_RETRY_DELAY_SECONDS' %v", retryDelaySeconds)
 
 	return &AppConfig{
 		Phone:              phone,
